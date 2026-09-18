@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dayna — лендинг IT-студии
 
-## Getting Started
+Продающий одностраничный сайт студии полного цикла: сайты, Telegram-боты, веб-сервисы, SaaS, автоматизация и внедрение ИИ.
+Заявки с формы приходят в Telegram.
 
-First, run the development server:
+**Стек:** Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · react-hook-form + zod · lucide-react · next/font (Manrope + Inter).
+
+## Локальный запуск
+
+Нужен Node.js 20+.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # заполните переменные (см. ниже)
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Проверки перед коммитом:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Без `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` в режиме разработки заявка не отправляется, а печатается в консоль сервера — форму можно тестировать без бота. В продакшене без этих переменных API вернёт ошибку.
 
-## Learn More
+## Переменные окружения
 
-To learn more about Next.js, take a look at the following resources:
+| Переменная | Где взять | Зачем |
+|---|---|---|
+| `TELEGRAM_BOT_TOKEN` | [@BotFather](https://t.me/BotFather) → `/newbot` | Токен бота, который пишет заявки |
+| `TELEGRAM_CHAT_ID` | Напишите боту `/start` (или добавьте в группу), откройте `https://api.telegram.org/bot<TOKEN>/getUpdates` и возьмите `chat.id` (у групп он отрицательный) | Куда присылать заявки |
+| `NEXT_PUBLIC_SITE_URL` | Ваш домен без `/` в конце, например `https://dayna.studio` | canonical, sitemap, Open Graph |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Как менять контент
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Все тексты лежат в `/data` — вёрстку трогать не нужно.
 
-## Deploy on Vercel
+| Файл | Что внутри |
+|---|---|
+| `data/site.ts` | Название, слоган, контакты (Telegram, email, телефон), реквизиты, меню |
+| `data/hero.ts` | Первый экран: заголовок, подзаголовок, кнопки, метрики, содержимое витрины |
+| `data/services.ts` | Карточки услуг: тексты, сроки, размер в bento-сетке, список услуг в форме |
+| `data/content.ts` | Стек технологий, «боли → решения», кейсы, процесс, «почему мы», FAQ, финальный CTA |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Поиск по проекту `TODO:` покажет все места с заглушками, которые нужно заменить реальными данными.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Блок кейсов
+
+Компонент `components/sections/Cases.tsx` и тексты `casesSection` в `data/content.ts` готовы, но блок скрыт.
+Чтобы вернуть: замените заглушки реальными проектами и добавьте `<Cases />` в `app/page.tsx` (место отмечено комментарием),
+а в `data/site.ts` — пункт меню `{ label: "Кейсы", href: "#cases" }`.
+
+## Заявки
+
+- `POST /api/lead` — `app/api/lead/route.ts`
+- Серверная валидация zod (`lib/schemas.ts`), honeypot-поле `website`, rate limit — 5 заявок с IP за 10 минут (`lib/rate-limit.ts`).
+  Лимит хранится в памяти инстанса; для жёсткой защиты подключите Upstash Redis / Vercel KV.
+- Сообщение в Telegram форматируется в `lib/telegram.ts`: имя, контакт, услуга, комментарий, время (МСК), страница.
+- Клик «Обсудить проект» на карточке услуги прокручивает к форме и выбирает услугу (`lib/lead-events.ts`).
+
+## Структура
+
+```
+app/            страница, layout, API, SEO (sitemap, robots, opengraph-image, icon), политика конфиденциальности
+components/
+  layout/       Header, Footer, Logo, плавающая кнопка Telegram
+  sections/     секции страницы
+  mockups/      «живые» мини-интерфейсы вместо картинок
+  forms/        форма заявки
+  ui/           Button, Section, Reveal, Field, Badge, Card, Container
+data/           весь контент
+lib/            схемы, отправка в Telegram, rate limit, утилиты
+```
+
+## Деплой
+
+Проект задеплоен на Vercel и подключён к GitHub: каждый push в `main` запускает продакшн-деплой, push в другие ветки — preview.
+
+Первичная настройка (уже сделана, для справки):
+
+1. Импортировать репозиторий в Vercel (**Add New → Project**) или `npx vercel link` + `npx vercel git connect`.
+2. **Settings → Environment Variables:** добавить `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL` для Production и Preview.
+3. После изменения переменных — **Redeploy** последнего деплоя.
+4. Свой домен: **Settings → Domains**, затем обновить `NEXT_PUBLIC_SITE_URL`.

@@ -7,8 +7,12 @@ export const site = {
   tagline: "IT-продукты под ключ — от идеи до запуска",
   description:
     "Разрабатываем сайты, Telegram-ботов, веб-сервисы и SaaS, автоматизируем процессы и внедряем ИИ. Под ключ — от идеи и дизайна до запуска и поддержки.",
-  // TODO: заменить на реальный домен
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://dayna.studio",
+  // TODO: подключить свой домен и задать NEXT_PUBLIC_SITE_URL. До этого используется адрес Vercel
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
   locale: "ru_RU",
 
   contacts: {
