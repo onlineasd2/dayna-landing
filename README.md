@@ -75,11 +75,13 @@ lib/            схемы, отправка в Telegram, rate limit, утили
 
 ## Деплой
 
-Проект задеплоен на Vercel и подключён к GitHub: каждый push в `main` запускает продакшн-деплой, push в другие ветки — preview.
+Продакшн: **https://dayna-landing.vercel.app** (Vercel, проект `dayna-landing`).
 
-Первичная настройка (уже сделана, для справки):
+Автодеплой из GitHub: после подключения репозитория каждый push в `main` запускает продакшн-деплой, push в другие ветки — preview.
 
-1. Импортировать репозиторий в Vercel (**Add New → Project**) или `npx vercel link` + `npx vercel git connect`.
-2. **Settings → Environment Variables:** добавить `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL` для Production и Preview.
-3. После изменения переменных — **Redeploy** последнего деплоя.
+1. Подключить репозиторий: в Vercel **Project → Settings → Git → Connect Git Repository** (или `npx vercel git connect` из папки проекта).
+2. **Settings → Environment Variables:** добавить `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (и `NEXT_PUBLIC_SITE_URL`, если есть свой домен) для Production и Preview.
+3. После изменения переменных — **Deployments → … → Redeploy** последнего деплоя.
 4. Свой домен: **Settings → Domains**, затем обновить `NEXT_PUBLIC_SITE_URL`.
+
+Ручной деплой без Git: `npx vercel deploy --prod`.
