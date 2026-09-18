@@ -47,7 +47,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${inter.variable} ${manrope.variable}`}>
-      <body className="noise min-h-dvh overflow-x-clip">{children}</body>
+      <body className="noise min-h-dvh overflow-x-clip" suppressHydrationWarning>{children}</body>
     </html>
   );
 }
