@@ -96,10 +96,11 @@ lib/            i18n, схемы, отправка в Telegram, rate limit, ут
 ## Деплой
 
 Продакшн: **https://dayna-landing.vercel.app** (Vercel, проект `dayna-landing`).
+Репозиторий: **https://github.com/onlineasd2/dayna-landing**
 
-Автодеплой из GitHub: после подключения репозитория каждый push в `main` запускает продакшн-деплой, push в другие ветки — preview.
+Репозиторий подключён к Vercel: каждый push в `main` запускает продакшн-деплой, push в другие ветки — preview.
 
-1. Подключить репозиторий: в Vercel **Project → Settings → Git → Connect Git Repository** (или `npx vercel git connect` из папки проекта).
+1. Подключение репозитория (уже сделано): **Project → Settings → Git** или `npx vercel git connect`.
 2. **Settings → Environment Variables:** добавить `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (и `NEXT_PUBLIC_SITE_URL`, если есть свой домен) для Production и Preview.
 3. После изменения переменных — **Deployments → … → Redeploy** последнего деплоя.
 4. Свой домен: **Settings → Domains**, затем обновить `NEXT_PUBLIC_SITE_URL`.
