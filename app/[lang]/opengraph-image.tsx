@@ -1,13 +1,18 @@
 import { ImageResponse } from "next/og";
-import { hero } from "@/data/hero";
-import { site } from "@/data/site";
+import { getHero } from "@/data/hero";
+import { getSiteTexts, site } from "@/data/site";
+import { baseLocale, langParams, localeFromParam } from "@/lib/i18n";
+import { m } from "@/paraglide/messages.js";
 
-export const alt = `${site.name} — ${site.tagline}`;
+// alt — статичный: Next не даёт локализовать его без generateImageMetadata
+export const alt = site.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const title = hero.title;
-const subtitle = "Сайты · Боты · Веб-сервисы · Автоматизация · SaaS";
+// Картинка для каждого языка генерируется при сборке
+export function generateStaticParams() {
+  return langParams.map((lang) => ({ lang }));
+}
 
 /** Подгружаем подмножество Manrope с кириллицей (только нужные символы) из Google Fonts. */
 async function loadFont(weight: number, text: string): Promise<ArrayBuffer | null> {
@@ -23,8 +28,12 @@ async function loadFont(weight: number, text: string): Promise<ArrayBuffer | nul
   }
 }
 
-export default async function Image() {
-  const text = `${site.name}${title}${subtitle}${site.tagline}`;
+export default async function Image({ params }: { params: Promise<{ lang: string }> }) {
+  const locale = localeFromParam((await params).lang) ?? baseLocale;
+  const title = getHero(locale).title;
+  const subtitle = m.og_subtitle({}, { locale });
+  const tagline = getSiteTexts(locale).tagline;
+  const text = `${site.name}${title}${subtitle}${tagline}`;
   const [bold, semibold] = await Promise.all([loadFont(800, text), loadFont(600, text)]);
   const fonts = [
     bold && { name: "Manrope", data: bold, weight: 800 as const, style: "normal" as const },
@@ -73,7 +82,7 @@ export default async function Image() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 26, fontWeight: 600 }}>
           <div style={{ width: 12, height: 12, borderRadius: 6, background: "#C6F432" }} />
-          <div style={{ color: "#C6F432" }}>{site.tagline}</div>
+          <div style={{ color: "#C6F432" }}>{tagline}</div>
         </div>
       </div>
     ),

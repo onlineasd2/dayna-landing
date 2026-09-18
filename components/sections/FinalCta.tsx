@@ -3,10 +3,12 @@ import { LeadForm } from "@/components/forms/LeadForm";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { ctaSection } from "@/data/content";
-import { site, telegramUrl } from "@/data/site";
+import { getCtaSection } from "@/data/content";
+import { getSiteTexts, telegramUrl } from "@/data/site";
+import type { Locale } from "@/lib/i18n";
 
-export function FinalCta() {
+export function FinalCta({ locale }: { locale: Locale }) {
+  const ctaSection = getCtaSection(locale);
   return (
     <Section id="contact" labelledBy="contact-title" className="overflow-x-clip">
       <div className="card relative overflow-hidden p-6 sm:p-10 lg:p-14">
@@ -39,11 +41,11 @@ export function FinalCta() {
                 {ctaSection.telegramCta}
               </Button>
             </div>
-            <p className="mt-4 text-sm text-subtle">{site.contacts.workingHours}</p>
+            <p className="mt-4 text-sm text-subtle">{getSiteTexts(locale).workingHours}</p>
           </Reveal>
 
           <Reveal delay={0.1} className="self-start rounded-[var(--radius-card)] border border-border bg-bg/70 p-5 sm:p-7">
-            <LeadForm />
+            <LeadForm locale={locale} />
           </Reveal>
         </div>
       </div>

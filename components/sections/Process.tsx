@@ -1,8 +1,10 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { processSection } from "@/data/content";
+import { getProcessSection } from "@/data/content";
+import type { Locale } from "@/lib/i18n";
 
-export function Process() {
+export function Process({ locale }: { locale: Locale }) {
+  const processSection = getProcessSection(locale);
   return (
     <Section id="process" labelledBy="process-title">
       <SectionHeading

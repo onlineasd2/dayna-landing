@@ -1,5 +1,6 @@
 import "server-only";
-import { serviceOptions } from "@/data/services";
+import { getServiceOptions } from "@/data/services";
+import { localeLabels } from "@/lib/i18n";
 import type { LeadPayload } from "./schemas";
 
 const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -14,7 +15,8 @@ const moscowTime = new Intl.DateTimeFormat("ru-RU", {
 });
 
 export function formatLeadMessage(lead: LeadPayload, page: string | null): string {
-  const service = serviceOptions.find((o) => o.id === lead.service)?.label;
+  // Сообщение для команды — всегда на русском
+  const service = getServiceOptions("ru").find((o) => o.id === lead.service)?.label;
   const lines: string[] = [];
 
   lines.push("<b>🔥 Новая заявка с сайта</b>", "");
@@ -27,6 +29,7 @@ export function formatLeadMessage(lead: LeadPayload, page: string | null): strin
   }
 
   lines.push("", `🕒 ${moscowTime.format(new Date())} МСК`);
+  if (lead.locale) lines.push(`🗣 Язык сайта: ${localeLabels[lead.locale]}`);
   if (page) lines.push(`🌐 ${escapeHtml(page)}`);
 
   return lines.join("\n");

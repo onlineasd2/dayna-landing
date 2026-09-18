@@ -11,11 +11,12 @@ function clientIp(req: Request): string {
   );
 }
 
+// Коды ошибок: rate_limit | bad_request | invalid | send_failed — клиент показывает текст на языке страницы
 export async function POST(req: Request) {
   const limit = rateLimit(clientIp(req));
   if (!limit.ok) {
     return Response.json(
-      { ok: false, error: "Слишком много заявок. Попробуйте через несколько минут." },
+      { ok: false, error: "rate_limit" },
       { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
@@ -24,13 +25,13 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return Response.json({ ok: false, error: "Некорректный запрос" }, { status: 400 });
+    return Response.json({ ok: false, error: "bad_request" }, { status: 400 });
   }
 
   const parsed = leadSchema.safeParse(body);
   if (!parsed.success) {
     return Response.json(
-      { ok: false, error: "Проверьте поля формы", issues: z.flattenError(parsed.error).fieldErrors },
+      { ok: false, error: "invalid", issues: z.flattenError(parsed.error).fieldErrors },
       { status: 400 },
     );
   }
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
       return Response.json({ ok: true, dev: true });
     }
     console.error("[lead] Не удалось отправить заявку в Telegram:", error);
-    return Response.json({ ok: false, error: "Не удалось отправить заявку" }, { status: 502 });
+    return Response.json({ ok: false, error: "send_failed" }, { status: 502 });
   }
 
   return Response.json({ ok: true });

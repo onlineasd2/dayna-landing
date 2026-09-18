@@ -14,30 +14,60 @@ import {
   Workflow,
 } from "lucide-react";
 import type { ServiceVisual } from "@/data/services";
+import { t, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { m } from "@/paraglide/messages.js";
+
+function visualTexts(locale: Locale) {
+  const o = t(locale);
+  return {
+    agentStatus: m.mock_agent_status({}, o),
+    agentClient: m.mock_agent_client({}, o),
+    agentReply: m.mock_agent_reply({}, o),
+    agentBooked: m.mock_agent_tag_booked({}, o),
+    botPickTime: m.mock_bot_pick_time({}, o),
+    botConfirmed: m.mock_bot_confirmed({}, o),
+    flowRequest: m.mock_flow_request({}, o),
+    dashUsers: m.mock_dashboard_users({}, o),
+    dashActive: m.mock_dashboard_active({}, o),
+    kbQuestion: m.mock_kb_question({}, o),
+    kbAnswer: m.mock_kb_answer({}, o),
+    kbSource: m.mock_kb_source({}, o),
+    cabinetTabs: [m.mock_cabinet_tab_orders({}, o), m.mock_cabinet_tab_docs({}, o), m.mock_cabinet_tab_chat({}, o)],
+    cabinetOrder: (id: string) => m.mock_cabinet_order({ id }, o),
+    statusProgress: m.mock_cabinet_status_progress({}, o),
+    statusShipped: m.mock_cabinet_status_shipped({}, o),
+    statusDone: m.mock_cabinet_status_done({}, o),
+    landingBlocks: [m.mock_landing_block_1({}, o), m.mock_landing_block_2({}, o), m.mock_landing_block_3({}, o)],
+    landingLead: m.mock_landing_lead({}, o),
+  };
+}
+
+type Tx = ReturnType<typeof visualTexts>;
+type VisualProps = { tx: Tx };
 
 const frame = "rounded-2xl border border-border bg-bg/60";
 
-function AgentVisual() {
+function AgentVisual({ tx }: VisualProps) {
   return (
     <div className={cn(frame, "flex flex-col gap-2 p-3.5 text-[12px] leading-snug")}>
       <div className="mb-0.5 flex items-center gap-2 text-subtle">
         <span className="flex size-6 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Bot className="size-3.5" />
         </span>
-        Ассистент · онлайн 24/7
+        {tx.agentStatus}
         <span className="ml-auto size-1.5 animate-pulse-dot rounded-full bg-accent" />
       </div>
       <p className="max-w-[80%] self-end rounded-xl rounded-br-sm bg-white/[0.07] px-3 py-2">
-        Можно записаться на завтра вечером?
+        {tx.agentClient}
       </p>
       <p className="max-w-[85%] self-start rounded-xl rounded-bl-sm border border-accent/20 bg-accent/[0.07] px-3 py-2">
-        Да! Свободно в 18:00 и 19:30. Какое время удобнее?
+        {tx.agentReply}
       </p>
       <div className="flex flex-wrap gap-1.5 pt-1">
-        {["Запись создана", "→ CRM"].map((t) => (
-          <span key={t} className="rounded-md border border-accent/25 bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
-            {t}
+        {[tx.agentBooked, "→ CRM"].map((tag) => (
+          <span key={tag} className="rounded-md border border-accent/25 bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
+            {tag}
           </span>
         ))}
       </div>
@@ -45,11 +75,11 @@ function AgentVisual() {
   );
 }
 
-function BotVisual() {
+function BotVisual({ tx }: VisualProps) {
   return (
     <div className={cn(frame, "flex flex-col gap-2 p-3.5 text-[12px]")}>
       <p className="max-w-[88%] rounded-xl rounded-bl-sm bg-white/[0.06] px-3 py-2 leading-snug">
-        Выберите удобное время:
+        {tx.botPickTime}
       </p>
       <div className="grid grid-cols-3 gap-1.5">
         {["11:00", "14:30", "16:30"].map((b, i) => (
@@ -66,16 +96,16 @@ function BotVisual() {
       </div>
       <div className="flex items-center gap-2 rounded-xl bg-white/[0.04] px-3 py-2">
         <CalendarCheck className="size-3.5 text-accent" />
-        <span className="text-muted">Запись подтверждена</span>
+        <span className="text-muted">{tx.botConfirmed}</span>
         <CircleCheck className="ml-auto size-3.5 text-accent" />
       </div>
     </div>
   );
 }
 
-function FlowVisual() {
+function FlowVisual({ tx }: VisualProps) {
   const nodes = [
-    { icon: MessageSquare, label: "Заявка" },
+    { icon: MessageSquare, label: tx.flowRequest },
     { icon: Workflow, label: "n8n" },
     { icon: Database, label: "CRM" },
     { icon: Sheet, label: "1С" },
@@ -102,14 +132,14 @@ function FlowVisual() {
   );
 }
 
-function DashboardVisual() {
+function DashboardVisual({ tx }: VisualProps) {
   const bars = [38, 52, 44, 63, 58, 74, 69, 88, 81, 96];
   return (
     <div className={cn(frame, "grid gap-3 p-4 sm:grid-cols-[auto_1fr]")}>
       <div className="flex gap-3 sm:flex-col">
         {[
-          { label: "Пользователи", value: "1 280", delta: "+18%" },
-          { label: "Активны сегодня", value: "312", delta: "+24" },
+          { label: tx.dashUsers, value: "1 280", delta: "+18%" },
+          { label: tx.dashActive, value: "312", delta: "+24" },
         ].map((k) => (
           <div key={k.label} className="min-w-[120px] rounded-xl bg-white/[0.04] px-3 py-2">
             <p className="text-[11px] text-subtle">{k.label}</p>
@@ -131,42 +161,42 @@ function DashboardVisual() {
   );
 }
 
-function KnowledgeVisual() {
+function KnowledgeVisual({ tx }: VisualProps) {
   return (
     <div className={cn(frame, "flex flex-col gap-2 p-3.5 text-[12px]")}>
       <div className="flex items-center gap-2 rounded-lg bg-white/[0.05] px-2.5 py-1.5 text-muted">
         <Search className="size-3.5" />
-        Как оформить возврат?
+        {tx.kbQuestion}
       </div>
       <div className="rounded-lg border border-accent/20 bg-accent/[0.06] px-2.5 py-2 leading-snug">
         <Sparkles className="mr-1 inline size-3 text-accent" />
-        Возврат до 14 дней по заявлению…
+        {tx.kbAnswer}
       </div>
       <div className="flex items-center gap-1.5 text-[11px] text-subtle">
-        <FileText className="size-3" /> Регламент_возвратов.pdf · стр. 3
+        <FileText className="size-3" /> {tx.kbSource}
       </div>
     </div>
   );
 }
 
-function CabinetVisual() {
+function CabinetVisual({ tx }: VisualProps) {
   const rows = [
-    { id: "#1042", status: "В работе", accent: true },
-    { id: "#1041", status: "Отгружен", accent: false },
-    { id: "#1039", status: "Выполнен", accent: false },
+    { id: "#1042", status: tx.statusProgress, accent: true },
+    { id: "#1041", status: tx.statusShipped, accent: false },
+    { id: "#1039", status: tx.statusDone, accent: false },
   ];
   return (
     <div className={cn(frame, "overflow-hidden text-[12px]")}>
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-2">
-        {["Заказы", "Документы", "Чат"].map((t, i) => (
-          <span key={t} className={cn("rounded-md px-2 py-0.5", i === 0 ? "bg-white/[0.08] text-fg" : "text-subtle")}>
-            {t}
+        {tx.cabinetTabs.map((tab, i) => (
+          <span key={tab} className={cn("rounded-md px-2 py-0.5", i === 0 ? "bg-white/[0.08] text-fg" : "text-subtle")}>
+            {tab}
           </span>
         ))}
       </div>
       {rows.map((r) => (
         <div key={r.id} className="flex items-center justify-between border-b border-border px-3 py-2 last:border-0">
-          <span className="text-muted">Заказ {r.id}</span>
+          <span className="text-muted">{tx.cabinetOrder(r.id)}</span>
           <span
             className={cn(
               "rounded-full px-2 py-0.5 text-[11px]",
@@ -181,7 +211,7 @@ function CabinetVisual() {
   );
 }
 
-function LandingVisual() {
+function LandingVisual({ tx }: VisualProps) {
   return (
     <div className={cn(frame, "flex h-full flex-col overflow-hidden")}>
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-2">
@@ -218,22 +248,22 @@ function LandingVisual() {
         </div>
         <span className="block min-h-16 flex-1 rounded-lg border border-border bg-gradient-to-br from-white/[0.07] via-white/[0.02] to-transparent" />
         <div className="grid grid-cols-3 gap-2">
-          {["Проекты", "Отзывы", "Команда"].map((t) => (
-            <span key={t} className="rounded-lg border border-border bg-white/[0.03] px-2.5 py-3 text-[11px] text-subtle">
-              {t}
+          {tx.landingBlocks.map((block) => (
+            <span key={block} className="rounded-lg border border-border bg-white/[0.03] px-2.5 py-3 text-[11px] text-subtle">
+              {block}
             </span>
           ))}
         </div>
         <div className="flex items-center gap-2 rounded-xl border border-accent/25 bg-accent/[0.06] px-3 py-2 text-[12px]">
           <Send className="size-3.5 text-accent" />
-          <span className="text-muted">Новая заявка с сайта отправлена в Telegram</span>
+          <span className="text-muted">{tx.landingLead}</span>
         </div>
       </div>
     </div>
   );
 }
 
-const visuals: Record<ServiceVisual, () => React.JSX.Element> = {
+const visuals: Record<ServiceVisual, (props: VisualProps) => React.JSX.Element> = {
   agent: AgentVisual,
   bot: BotVisual,
   flow: FlowVisual,
@@ -243,11 +273,11 @@ const visuals: Record<ServiceVisual, () => React.JSX.Element> = {
   landing: LandingVisual,
 };
 
-export function ServiceVisualView({ kind }: { kind: ServiceVisual }) {
+export function ServiceVisualView({ kind, locale }: { kind: ServiceVisual; locale: Locale }) {
   const Visual = visuals[kind];
   return (
     <div aria-hidden="true" className="pointer-events-none h-full select-none">
-      <Visual />
+      <Visual tx={visualTexts(locale)} />
     </div>
   );
 }

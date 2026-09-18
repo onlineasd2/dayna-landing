@@ -1,4 +1,7 @@
 // Карточки услуг (bento-сетка) и список услуг для формы заявки.
+// Структура — здесь, тексты — в messages/{locale}.json (ключи service_*).
+import { t, type Locale } from "@/lib/i18n";
+import { m } from "@/paraglide/messages.js";
 
 export const serviceIds = [
   "landing",
@@ -13,101 +16,95 @@ export type ServiceId = (typeof serviceIds)[number];
 
 export type ServiceVisual = "agent" | "bot" | "flow" | "dashboard" | "knowledge" | "cabinet" | "landing";
 
-export type Service = {
-  id: ServiceId;
-  title: string;
-  /** Короткое название — для выбора услуги в форме */
-  short: string;
-  problem: string;
-  result: string;
-  /** Срок, который показываем на карточке */
-  timeline: string;
-  visual: ServiceVisual;
-  /** Классы размеров в bento-сетке */
-  layout: string;
+type ServiceTexts = { title: string; short: string; problem: string; result: string; timeline: string };
+
+const layout: Record<ServiceId, { visual: ServiceVisual; layout: string }> = {
+  landing: { visual: "landing", layout: "md:col-span-2 lg:col-span-3 lg:row-span-2" },
+  bot: { visual: "bot", layout: "lg:col-span-3" },
+  automation: { visual: "flow", layout: "lg:col-span-3" },
+  saas: { visual: "dashboard", layout: "md:col-span-2 lg:col-span-4" },
+  "web-service": { visual: "cabinet", layout: "lg:col-span-2" },
+  "ai-integration": { visual: "knowledge", layout: "lg:col-span-3" },
+  "ai-agent": { visual: "agent", layout: "lg:col-span-3" },
 };
 
-export const servicesSection = {
-  eyebrow: "Услуги",
-  title: "Что мы делаем",
-  subtitle: "Семь направлений у одного подрядчика. Дизайн продумываем сами — в каждом проекте.",
-  cta: "Обсудить проект",
-};
+function serviceTexts(id: ServiceId, locale: Locale): ServiceTexts {
+  const o = t(locale);
+  switch (id) {
+    case "landing":
+      return {
+        title: m.service_landing_title({}, o),
+        short: m.service_landing_short({}, o),
+        problem: m.service_landing_problem({}, o),
+        result: m.service_landing_result({}, o),
+        timeline: m.service_landing_timeline({}, o),
+      };
+    case "bot":
+      return {
+        title: m.service_bot_title({}, o),
+        short: m.service_bot_short({}, o),
+        problem: m.service_bot_problem({}, o),
+        result: m.service_bot_result({}, o),
+        timeline: m.service_bot_timeline({}, o),
+      };
+    case "automation":
+      return {
+        title: m.service_automation_title({}, o),
+        short: m.service_automation_short({}, o),
+        problem: m.service_automation_problem({}, o),
+        result: m.service_automation_result({}, o),
+        timeline: m.service_automation_timeline({}, o),
+      };
+    case "saas":
+      return {
+        title: m.service_saas_title({}, o),
+        short: m.service_saas_short({}, o),
+        problem: m.service_saas_problem({}, o),
+        result: m.service_saas_result({}, o),
+        timeline: m.service_saas_timeline({}, o),
+      };
+    case "web-service":
+      return {
+        title: m.service_web_title({}, o),
+        short: m.service_web_short({}, o),
+        problem: m.service_web_problem({}, o),
+        result: m.service_web_result({}, o),
+        timeline: m.service_web_timeline({}, o),
+      };
+    case "ai-integration":
+      return {
+        title: m.service_ai_integration_title({}, o),
+        short: m.service_ai_integration_short({}, o),
+        problem: m.service_ai_integration_problem({}, o),
+        result: m.service_ai_integration_result({}, o),
+        timeline: m.service_ai_integration_timeline({}, o),
+      };
+    case "ai-agent":
+      return {
+        title: m.service_ai_agent_title({}, o),
+        short: m.service_ai_agent_short({}, o),
+        problem: m.service_ai_agent_problem({}, o),
+        result: m.service_ai_agent_result({}, o),
+        timeline: m.service_ai_agent_timeline({}, o),
+      };
+  }
+}
 
-export const services: Service[] = [
-  {
-    id: "landing",
-    title: "Сайты и лендинги",
-    short: "Сайт или лендинг",
-    problem: "Сайта нет или он не приносит заявок.",
-    result: "Быстрый сайт с понятным предложением, SEO и формой заявки, которая сразу попадает к вам.",
-    timeline: "1–2 недели",
-    visual: "landing",
-    layout: "md:col-span-2 lg:col-span-3 lg:row-span-2",
-  },
-  {
-    id: "bot",
-    title: "Telegram-боты",
-    short: "Telegram-бот",
-    problem: "Запись, заказы и ответы на вопросы идут вручную через переписку.",
-    result: "Бот принимает заявки, записывает клиентов и отвечает на частые вопросы сам.",
-    timeline: "1–3 недели",
-    visual: "bot",
-    layout: "lg:col-span-3",
-  },
-  {
-    id: "automation",
-    title: "Автоматизация бизнеса",
-    short: "Автоматизация",
-    problem: "Менеджеры переносят данные между CRM, 1С и таблицами.",
-    result: "Системы синхронизируются сами, отчёт готов каждое утро.",
-    timeline: "1–3 недели",
-    visual: "flow",
-    layout: "lg:col-span-3",
-  },
-  {
-    id: "saas",
-    title: "SaaS-продукты",
-    short: "SaaS-продукт",
-    problem: "Есть идея продукта, но нет команды, чтобы быстро её проверить.",
-    result: "MVP с личным кабинетом и аналитикой — проверяете идею на реальных пользователях.",
-    timeline: "6–12 недель",
-    visual: "dashboard",
-    layout: "md:col-span-2 lg:col-span-4",
-  },
-  {
-    id: "web-service",
-    title: "Веб-сервисы",
-    short: "Веб-сервис",
-    problem: "Клиенты и партнёры звонят узнать статус заказа.",
-    result: "Личный кабинет и админка: статусы и документы в одном окне.",
-    timeline: "4–10 недель",
-    visual: "cabinet",
-    layout: "lg:col-span-2",
-  },
-  {
-    id: "ai-integration",
-    title: "Внедрение ИИ",
-    short: "Внедрение ИИ",
-    problem: "Сотрудники часами ищут ответы в регламентах и документах.",
-    result: "ИИ-ассистент отвечает по базе знаний компании за секунды.",
-    timeline: "3–6 недель",
-    visual: "knowledge",
-    layout: "lg:col-span-3",
-  },
-  {
-    id: "ai-agent",
-    title: "ИИ-ассистенты для клиентов",
-    short: "ИИ-ассистент",
-    problem: "Клиенты пишут ночью и в выходные, а ответить некому.",
-    result: "Ассистент отвечает на вопросы, записывает клиентов и передаёт заявки в CRM.",
-    timeline: "2–4 недели",
-    visual: "agent",
-    layout: "lg:col-span-3",
-  },
-];
+export function getServicesSection(locale: Locale) {
+  const o = t(locale);
+  return {
+    eyebrow: m.services_eyebrow({}, o),
+    title: m.services_title({}, o),
+    subtitle: m.services_subtitle({}, o),
+    cta: m.services_cta({}, o),
+    items: serviceIds.map((id) => ({ id, ...layout[id], ...serviceTexts(id, locale) })),
+  };
+}
 
-export const serviceOptions = [
-  ...services.map((s) => ({ id: s.id, label: s.short })),
-  { id: "other", label: "Другое" },
-] as const;
+/** Варианты услуг для формы заявки */
+export function getServiceOptions(locale: Locale) {
+  return [
+    ...serviceIds.map((id) => ({ id: id as ServiceId | "other", label: serviceTexts(id, locale).short })),
+    { id: "other" as const, label: m.service_other({}, t(locale)) },
+  ];
+}

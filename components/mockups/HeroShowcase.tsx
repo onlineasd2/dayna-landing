@@ -1,12 +1,13 @@
 // Витрина на первом экране: сайт, Telegram-бот и автоматическая передача заявки.
 // Чистая вёрстка на сервере, анимация — лёгкое «парение» на CSS (отключается при prefers-reduced-motion).
 import { ArrowRight, Bot, CheckCheck, CircleCheck, Globe, Send, Workflow } from "lucide-react";
-import { heroShowcase } from "@/data/hero";
+import { getShowcase } from "@/data/hero";
+import type { Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-const { site, bot, lead } = heroShowcase;
+type Showcase = ReturnType<typeof getShowcase>;
 
-function SiteWindow() {
+function SiteWindow({ site }: { site: Showcase["site"] }) {
   return (
     <div className="card overflow-hidden shadow-[0_40px_120px_-40px_rgb(0_0_0/0.9)]">
       <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
@@ -47,7 +48,7 @@ function SiteWindow() {
   );
 }
 
-function BotPhone() {
+function BotPhone({ bot }: { bot: Showcase["bot"] }) {
   return (
     <div className="w-[190px] overflow-hidden rounded-[26px] border border-border-strong bg-surface shadow-[0_30px_80px_-20px_rgb(0_0_0/0.9)] sm:w-[210px]">
       <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
@@ -97,7 +98,7 @@ function BotPhone() {
   );
 }
 
-function LeadCard() {
+function LeadCard({ lead }: { lead: Showcase["lead"] }) {
   return (
     <div className="glass w-[230px] rounded-2xl border border-accent/30 p-3.5 shadow-[0_20px_60px_-15px_rgb(198_244_50/0.3)] sm:w-[250px]">
       <div className="mb-3 flex items-center gap-2">
@@ -123,21 +124,22 @@ function LeadCard() {
   );
 }
 
-export function HeroShowcase({ className }: { className?: string }) {
+export function HeroShowcase({ locale, className }: { locale: Locale; className?: string }) {
+  const { label, site, bot, lead } = getShowcase(locale);
   return (
     <div
       className={cn("relative pb-24 pl-6 sm:pb-20 sm:pl-16", className)}
       role="img"
-      aria-label="Примеры наших продуктов: сайт компании, Telegram-бот для записи и автоматическая передача заявки в CRM и Telegram"
+      aria-label={label}
     >
       <div className="glow pointer-events-none absolute -inset-10 -z-10 opacity-80" aria-hidden="true" />
       <div aria-hidden="true">
-        <SiteWindow />
+        <SiteWindow site={site} />
         <div className="absolute bottom-0 left-0 animate-float motion-reduce:animate-none">
-          <BotPhone />
+          <BotPhone bot={bot} />
         </div>
         <div className="absolute -right-6 bottom-14 hidden animate-float [animation-delay:-3s] motion-reduce:animate-none sm:block">
-          <LeadCard />
+          <LeadCard lead={lead} />
         </div>
       </div>
     </div>

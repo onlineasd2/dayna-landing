@@ -1,9 +1,11 @@
 import { ArrowRight, Check, X } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { painsSection } from "@/data/content";
+import { getPainsSection } from "@/data/content";
+import type { Locale } from "@/lib/i18n";
 
-export function PainsSolutions() {
+export function PainsSolutions({ locale }: { locale: Locale }) {
+  const painsSection = getPainsSection(locale);
   return (
     <Section id="pains" labelledBy="pains-title">
       <SectionHeading
@@ -15,9 +17,9 @@ export function PainsSolutions() {
 
       <div className="card overflow-hidden">
         <div className="hidden grid-cols-[1fr_auto_1fr] items-center gap-6 border-b border-border px-6 py-3 text-xs font-medium uppercase tracking-[0.14em] text-subtle md:grid">
-          <span>Сейчас</span>
+          <span>{painsSection.now}</span>
           <span className="w-8" />
-          <span>С нами</span>
+          <span>{painsSection.withUs}</span>
         </div>
         <ul>
           {painsSection.items.map((item, i) => (
@@ -32,7 +34,7 @@ export function PainsSolutions() {
                   <X className="size-3" aria-hidden="true" />
                 </span>
                 <span>
-                  <span className="sr-only">Проблема: </span>
+                  <span className="sr-only">{painsSection.problemSr} </span>
                   {item.pain}
                 </span>
               </p>
@@ -42,7 +44,7 @@ export function PainsSolutions() {
                   <Check className="size-3" aria-hidden="true" />
                 </span>
                 <span>
-                  <span className="sr-only">Решение: </span>
+                  <span className="sr-only">{painsSection.solutionSr} </span>
                   {item.solution}
                 </span>
               </p>

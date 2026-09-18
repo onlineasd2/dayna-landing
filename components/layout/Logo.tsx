@@ -1,9 +1,15 @@
+import type { Locale } from "@/lib/i18n";
 import { site } from "@/data/site";
 import { cn } from "@/lib/utils";
+import { m } from "@/paraglide/messages.js";
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({ locale, className }: { locale: Locale; className?: string }) {
   return (
-    <a href="#top" className={cn("inline-flex items-center gap-2.5 rounded-md", className)} aria-label={`${site.name} — на главную`}>
+    <a
+      href="#top"
+      className={cn("inline-flex items-center gap-2.5 rounded-md", className)}
+      aria-label={m.logo_home({ name: site.name }, { locale })}
+    >
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <rect width="28" height="28" rx="8" fill="var(--color-accent)" />
         <path d="M8 7.5h5.5a6.5 6.5 0 0 1 0 13H8v-13Z" fill="var(--color-accent-fg)" />

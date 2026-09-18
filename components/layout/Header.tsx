@@ -4,11 +4,17 @@ import { ArrowRight, Menu, Send, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { headerCta, nav, site, telegramUrl } from "@/data/site";
+import { getNav, getSiteTexts, telegramUrl } from "@/data/site";
+import type { Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { m } from "@/paraglide/messages.js";
+import { LangSwitcher } from "./LangSwitcher";
 import { Logo } from "./Logo";
 
-export function Header() {
+export function Header({ locale }: { locale: Locale }) {
+  const o = { locale };
+  const nav = getNav(locale);
+  const cta = { label: m.header_cta({}, o), href: "#contact" };
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -39,9 +45,9 @@ export function Header() {
       )}
     >
       <Container className="flex h-16 items-center justify-between gap-6">
-        <Logo />
+        <Logo locale={locale} />
 
-        <nav aria-label="Основное меню" className="hidden md:block">
+        <nav aria-label={m.nav_main_label({}, o)} className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {nav.map((item) => (
               <li key={item.href}>
@@ -57,18 +63,19 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <LangSwitcher locale={locale} className="hidden sm:block" />
           <div className="hidden sm:block">
-            <Button href={headerCta.href} size="sm">
-              {headerCta.label}
+            <Button href={cta.href} size="sm">
+              {cta.label}
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </Button>
           </div>
           <button
             type="button"
-            className="inline-flex size-10 items-center justify-center rounded-lg border border-border-strong text-fg md:hidden"
+            className="inline-flex size-10 items-center justify-center rounded-lg border border-border-strong text-fg lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? "Закрыть меню" : "Открыть меню"}
+            aria-label={open ? m.menu_close({}, o) : m.menu_open({}, o)}
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
@@ -79,10 +86,10 @@ export function Header() {
       {open && (
           <div
             id="mobile-menu"
-            className="h-[calc(100dvh-4rem)] animate-fade-in overflow-y-auto border-t border-border bg-bg md:hidden"
+            className="h-[calc(100dvh-4rem)] animate-fade-in overflow-y-auto border-t border-border bg-bg lg:hidden"
           >
             <Container className="flex h-full flex-col py-6">
-              <nav aria-label="Мобильное меню">
+              <nav aria-label={m.nav_mobile_label({}, o)}>
                 <ul className="flex flex-col">
                   {nav.map((item) => (
                     <li key={item.href}>
@@ -99,14 +106,15 @@ export function Header() {
                 </ul>
               </nav>
               <div className="mt-auto flex flex-col gap-3 pt-8">
-                <Button href={headerCta.href} size="lg" onClick={close}>
-                  {headerCta.label}
+                <LangSwitcher locale={locale} className="self-center sm:hidden" />
+                <Button href={cta.href} size="lg" onClick={close}>
+                  {cta.label}
                 </Button>
                 <Button href={telegramUrl} variant="secondary" size="lg" target="_blank" rel="noopener noreferrer">
                   <Send className="size-4" aria-hidden="true" />
-                  Написать в Telegram
+                  {m.write_telegram({}, o)}
                 </Button>
-                <p className="pt-2 text-center text-sm text-subtle">{site.contacts.workingHours}</p>
+                <p className="pt-2 text-center text-sm text-subtle">{getSiteTexts(locale).workingHours}</p>
               </div>
             </Container>
           </div>

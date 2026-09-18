@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "i18n": "paraglide-js compile --project ./project.inlang --outdir ./paraglide --strategy baseLocale --silent",
+    "predev": "npm run i18n",
     "dev": "next dev",
+    "prebuild": "npm run i18n",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "prelint": "npm run i18n",
+    "lint": "eslint",
+    "postinstall": "npm run i18n"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -19,6 +24,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@inlang/paraglide-js": "^2.25.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

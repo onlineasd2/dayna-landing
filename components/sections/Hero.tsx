@@ -3,9 +3,10 @@ import { HeroShowcase } from "@/components/mockups/HeroShowcase";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { hero } from "@/data/hero";
+import { getHero } from "@/data/hero";
+import type { Locale } from "@/lib/i18n";
 
-function HeroTitle() {
+function HeroTitle({ hero }: { hero: ReturnType<typeof getHero> }) {
   const [before, after] = hero.title.split(hero.titleAccent);
   return (
     <h1 id="hero-title" className="font-display text-h1 font-extrabold text-balance">
@@ -16,7 +17,8 @@ function HeroTitle() {
   );
 }
 
-export function Hero() {
+export function Hero({ locale }: { locale: Locale }) {
+  const hero = getHero(locale);
   return (
     <section id="top" aria-labelledby="hero-title" className="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24">
       {/* Фон: сетка точек + свечение */}
@@ -32,7 +34,7 @@ export function Hero() {
             <Badge dot className="mb-6">
               {hero.badge}
             </Badge>
-            <HeroTitle />
+            <HeroTitle hero={hero} />
             <p className="mt-6 max-w-xl text-lead text-muted text-pretty">{hero.subtitle}</p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -47,7 +49,7 @@ export function Hero() {
             </div>
           </div>
 
-          <HeroShowcase className="mx-auto w-full max-w-[520px] lg:mr-0" />
+          <HeroShowcase locale={locale} className="mx-auto w-full max-w-[520px] lg:mr-0" />
         </div>
 
         <dl className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border sm:mt-24 lg:grid-cols-4">

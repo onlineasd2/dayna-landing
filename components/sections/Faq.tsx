@@ -1,9 +1,11 @@
 import { Plus } from "lucide-react";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { faqSection } from "@/data/content";
+import { getFaqSection } from "@/data/content";
+import type { Locale } from "@/lib/i18n";
 
 // Аккордеон на нативных <details>: доступен с клавиатуры и работает без JS
-export function Faq() {
+export function Faq({ locale }: { locale: Locale }) {
+  const faqSection = getFaqSection(locale);
   return (
     <Section id="faq" labelledBy="faq-title">
       <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">

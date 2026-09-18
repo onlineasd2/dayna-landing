@@ -2,41 +2,44 @@
 
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { TextAreaField, TextField } from "@/components/ui/Field";
+import { t, type Locale } from "@/lib/i18n";
 import type { ContactFields } from "@/lib/schemas";
+import { m } from "@/paraglide/messages.js";
 
 type Props = {
+  locale: Locale;
   idPrefix: string;
   register: UseFormRegister<ContactFields>;
   errors: FieldErrors<ContactFields>;
-  commentPlaceholder?: string;
 };
 
-/** Имя, контакт, комментарий и honeypot — общие для формы и квиза. */
-export function ContactInputs({ idPrefix, register, errors, commentPlaceholder }: Props) {
+/** Имя, контакт, комментарий и honeypot. */
+export function ContactInputs({ locale, idPrefix, register, errors }: Props) {
+  const o = t(locale);
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           id={`${idPrefix}-name`}
-          label="Имя"
+          label={m.form_name_label({}, o)}
           autoComplete="name"
-          placeholder="Как к вам обращаться"
+          placeholder={m.form_name_placeholder({}, o)}
           error={errors.name?.message}
           {...register("name")}
         />
         <TextField
           id={`${idPrefix}-contact`}
-          label="Телефон, Telegram или email"
+          label={m.form_contact_label({}, o)}
           autoComplete="tel"
-          placeholder="+7 900 000-00-00 или @username"
+          placeholder={m.form_contact_placeholder({}, o)}
           error={errors.contact?.message}
           {...register("contact")}
         />
       </div>
       <TextAreaField
         id={`${idPrefix}-comment`}
-        label="Комментарий (необязательно)"
-        placeholder={commentPlaceholder ?? "Коротко о задаче"}
+        label={m.form_comment_label({}, o)}
+        placeholder={m.form_comment_placeholder({}, o)}
         rows={3}
         error={errors.comment?.message}
         {...register("comment")}

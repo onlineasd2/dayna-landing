@@ -1,198 +1,107 @@
-// Тексты секций: стек, боли, кейсы, процесс, преимущества, FAQ, финальный CTA.
+// Тексты секций. Структура — здесь, сами тексты — в messages/{locale}.json.
+import { t, type Locale } from "@/lib/i18n";
+import { m } from "@/paraglide/messages.js";
 
-export const techSection = {
-  label: "Работаем с проверенными технологиями",
-  items: [
-    "OpenAI",
-    "Claude",
-    "Telegram",
-    "Next.js",
-    "n8n",
-    "Make",
-    "Supabase",
-    "PostgreSQL",
-    "amoCRM",
-    "Bitrix24",
-    "1С",
-    "ЮKassa",
-    "Stripe",
-    "WhatsApp",
-  ],
-};
+export const techItems = [
+  "OpenAI",
+  "Claude",
+  "Telegram",
+  "Next.js",
+  "n8n",
+  "Make",
+  "Supabase",
+  "PostgreSQL",
+  "amoCRM",
+  "Bitrix24",
+  "1С",
+  "ЮKassa",
+  "Stripe",
+  "WhatsApp",
+];
 
-export const painsSection = {
-  eyebrow: "Задачи",
-  title: "Узнаёте свою ситуацию?",
-  subtitle: "Мы начинаем не с технологий, а с задач вашего бизнеса.",
-  items: [
-    {
-      pain: "Сайт есть, но почти не приносит заявок",
-      solution: "Сайт с понятным предложением, который превращает посетителей в обращения",
-    },
-    {
-      pain: "Заявки теряются между мессенджерами, почтой и звонками",
-      solution: "Все обращения автоматически попадают в CRM с источником и историей",
-    },
-    {
-      pain: "Менеджеры не успевают отвечать, клиенты уходят к конкурентам",
-      solution: "Бот или ИИ-ассистент отвечает мгновенно — круглосуточно и без выходных",
-    },
-    {
-      pain: "Отчёты собирают вручную каждую пятницу",
-      solution: "Дашборд обновляется сам каждый час — цифры всегда под рукой",
-    },
-    {
-      pain: "Сотрудники задают одни и те же вопросы руководителям",
-      solution: "База знаний с умным поиском отвечает по регламентам компании за секунды",
-    },
-    {
-      pain: "Идея продукта месяцами живёт в заметках",
-      solution: "Рабочий MVP за 6–8 недель — проверяете идею на реальных пользователях",
-    },
-  ],
-};
+export function getPainsSection(locale: Locale) {
+  const o = t(locale);
+  return {
+    eyebrow: m.pains_eyebrow({}, o),
+    title: m.pains_title({}, o),
+    subtitle: m.pains_subtitle({}, o),
+    now: m.pains_now({}, o),
+    withUs: m.pains_with_us({}, o),
+    problemSr: m.pains_problem_sr({}, o),
+    solutionSr: m.pains_solution_sr({}, o),
+    items: [
+      { pain: m.pain_1({}, o), solution: m.pain_1_solution({}, o) },
+      { pain: m.pain_2({}, o), solution: m.pain_2_solution({}, o) },
+      { pain: m.pain_3({}, o), solution: m.pain_3_solution({}, o) },
+      { pain: m.pain_4({}, o), solution: m.pain_4_solution({}, o) },
+      { pain: m.pain_5({}, o), solution: m.pain_5_solution({}, o) },
+      { pain: m.pain_6({}, o), solution: m.pain_6_solution({}, o) },
+    ],
+  };
+}
 
-export type CaseStudy = {
-  niche: string;
-  title: string;
-  task: string;
-  solution: string;
-  results: { value: string; label: string }[];
-  stack: string[];
-};
+export function getProcessSection(locale: Locale) {
+  const o = t(locale);
+  return {
+    eyebrow: m.process_eyebrow({}, o),
+    title: m.process_title({}, o),
+    subtitle: m.process_subtitle({}, o),
+    steps: [
+      { title: m.process_1_title({}, o), text: m.process_1_text({}, o), duration: m.process_1_duration({}, o) },
+      { title: m.process_2_title({}, o), text: m.process_2_text({}, o), duration: m.process_2_duration({}, o) },
+      { title: m.process_3_title({}, o), text: m.process_3_text({}, o), duration: m.process_3_duration({}, o) },
+      { title: m.process_4_title({}, o), text: m.process_4_text({}, o), duration: m.process_4_duration({}, o) },
+      { title: m.process_5_title({}, o), text: m.process_5_text({}, o), duration: m.process_5_duration({}, o) },
+      { title: m.process_6_title({}, o), text: m.process_6_text({}, o), duration: m.process_6_duration({}, o) },
+    ],
+  };
+}
 
-// Блок кейсов временно скрыт со страницы (см. app/page.tsx).
-// TODO: все кейсы — заглушки. Заменить на реальные проекты с цифрами и вернуть <Cases /> на страницу
-export const casesSection = {
-  eyebrow: "Кейсы",
-  title: "Уже сделали для других",
-  subtitle: "Каждый проект считаем в деньгах клиента — выручке, заявках и сэкономленных часах.",
-  items: [
-    {
-      niche: "Сеть автосервисов",
-      title: "ИИ-агент записывает клиентов в Telegram и WhatsApp",
-      task: "Администраторы не успевали отвечать, вечерние заявки терялись.",
-      solution: "ИИ-агент с базой цен и расписанием, запись в YCLIENTS и карточка в amoCRM.",
-      results: [
-        { value: "+38%", label: "конверсия в запись" },
-        { value: "−60%", label: "нагрузка на администраторов" },
-      ],
-      stack: ["Claude", "Telegram", "WhatsApp", "amoCRM"],
-    },
-    {
-      niche: "Онлайн-школа",
-      title: "Бот продаж с прогревом и оплатой",
-      task: "Продажи курса шли вручную через директ, менеджеры выгорали.",
-      solution: "Воронка в Telegram: прогрев, тест, оплата через ЮKassa, доступ к урокам.",
-      results: [
-        { value: "1,2 млн ₽", label: "выручка за первый месяц" },
-        { value: "9 дней", label: "окупаемость" },
-      ],
-      stack: ["Telegram", "ЮKassa", "Node.js", "PostgreSQL"],
-    },
-    {
-      niche: "B2B-дистрибьютор",
-      title: "Заказы из CRM сами попадают в 1С",
-      task: "Менеджеры вручную переносили заказы, ошибались в артикулах.",
-      solution: "Интеграция amoCRM и 1С через n8n, проверка остатков и отчёт руководителю.",
-      results: [
-        { value: "40 → 4 мин", label: "обработка одного заказа" },
-        { value: "0", label: "ошибок в артикулах" },
-      ],
-      stack: ["n8n", "amoCRM", "1С", "Google Sheets"],
-    },
-    {
-      niche: "SaaS для салонов красоты",
-      title: "MVP сервиса онлайн-записи",
-      task: "Проверить гипотезу продукта до привлечения инвестиций.",
-      solution: "Веб-сервис с записью, напоминаниями, тарифами и оплатой подписки.",
-      results: [
-        { value: "120", label: "платящих салонов за 4 месяца" },
-        { value: "8 недель", label: "от идеи до запуска" },
-      ],
-      stack: ["Next.js", "Supabase", "Stripe", "OpenAI"],
-    },
-  ] satisfies CaseStudy[],
-};
+export type WhyIcon = "palette" | "lock" | "file" | "calendar" | "sparkles" | "lifebuoy";
 
-export const processSection = {
-  eyebrow: "Процесс",
-  title: "Как проходит работа",
-  subtitle: "Прозрачно на каждом шаге: вы видите результат каждую неделю, а не в конце.",
-  steps: [
-    { title: "Заявка", text: "Оставляете контакт — отвечаем в течение 15 минут.", duration: "15 минут" },
-    { title: "Созвон или переписка", text: "Разбираем задачу, предлагаем решение и согласуем условия.", duration: "1 день" },
-    { title: "ТЗ, дизайн и договор", text: "Фиксируем объём, показываем дизайн, подписываем договор.", duration: "3–7 дней" },
-    { title: "Разработка", text: "Показываем рабочую версию каждую неделю.", duration: "1–10 недель" },
-    { title: "Запуск", text: "Выкатываем в прод, подключаем аналитику, обучаем команду.", duration: "1–2 дня" },
-    { title: "Поддержка", text: "30 дней бесплатно исправляем и дорабатываем.", duration: "30 дней" },
-  ],
-};
+export function getWhySection(locale: Locale) {
+  const o = t(locale);
+  return {
+    eyebrow: m.why_eyebrow({}, o),
+    title: m.why_title({}, o),
+    subtitle: m.why_subtitle({}, o),
+    items: [
+      { icon: "palette", title: m.why_1_title({}, o), text: m.why_1_text({}, o) },
+      { icon: "lock", title: m.why_2_title({}, o), text: m.why_2_text({}, o) },
+      { icon: "file", title: m.why_3_title({}, o), text: m.why_3_text({}, o) },
+      { icon: "calendar", title: m.why_4_title({}, o), text: m.why_4_text({}, o) },
+      { icon: "sparkles", title: m.why_5_title({}, o), text: m.why_5_text({}, o) },
+      { icon: "lifebuoy", title: m.why_6_title({}, o), text: m.why_6_text({}, o) },
+    ] satisfies { icon: WhyIcon; title: string; text: string }[],
+  };
+}
 
-export const whySection = {
-  eyebrow: "Почему мы",
-  title: "Почему с нами спокойно",
-  subtitle: "Вы занимаетесь бизнесом, мы отвечаем за то, чтобы продукт вышел в срок и работал.",
-  items: [
-    { icon: "palette", title: "Дизайн в каждом проекте", text: "Не нужно искать отдельного дизайнера — интерфейс продумываем сами." },
-    { icon: "lock", title: "Понятные сроки", text: "Согласуем план с датами до старта и держим его." },
-    { icon: "file", title: "Договор и NDA", text: "Работаем официально, код и права на продукт — ваши." },
-    { icon: "calendar", title: "Демо каждую неделю", text: "Видите прогресс в живом продукте, а не в отчётах." },
-    { icon: "sparkles", title: "Современные технологии", text: "Используем актуальный стек и ИИ там, где он действительно экономит время." },
-    { icon: "lifebuoy", title: "30 дней поддержки", text: "После запуска остаёмся на связи и бесплатно исправляем ошибки." },
-  ],
-} as const;
+export function getFaqSection(locale: Locale) {
+  const o = t(locale);
+  return {
+    eyebrow: m.faq_eyebrow({}, o),
+    title: m.faq_title({}, o),
+    items: [
+      { q: m.faq_1_q({}, o), a: m.faq_1_a({}, o) },
+      { q: m.faq_2_q({}, o), a: m.faq_2_a({}, o) },
+      { q: m.faq_3_q({}, o), a: m.faq_3_a({}, o) },
+      { q: m.faq_4_q({}, o), a: m.faq_4_a({}, o) },
+      { q: m.faq_5_q({}, o), a: m.faq_5_a({}, o) },
+      { q: m.faq_6_q({}, o), a: m.faq_6_a({}, o) },
+      { q: m.faq_7_q({}, o), a: m.faq_7_a({}, o) },
+      { q: m.faq_8_q({}, o), a: m.faq_8_a({}, o) },
+    ],
+  };
+}
 
-export const faqSection = {
-  eyebrow: "FAQ",
-  title: "Частые вопросы",
-  items: [
-    {
-      q: "Как узнать стоимость проекта?",
-      a: "Напишите нам или оставьте заявку — обсудим задачу в переписке или на созвоне и предложим решение со сроками и условиями.",
-    },
-    {
-      q: "Сколько времени займёт проект?",
-      a: "Лендинг или бот — 1–3 недели, веб-сервис или SaaS — от 4 до 12 недель. Точный график с датами демо согласуем до старта.",
-    },
-    {
-      q: "Работаете по договору?",
-      a: "Да, всегда. В договоре фиксируем объём работ, сроки и передачу прав на код и дизайн.",
-    },
-    {
-      q: "Можно начать с небольшого этапа?",
-      a: "Да. Часто начинаем с MVP или одного модуля, чтобы быстро получить результат, а затем развиваем продукт.",
-    },
-    {
-      q: "Сколько правок можно внести?",
-      a: "Две итерации правок дизайна и любые исправления ошибок до сдачи. Каждую неделю вы видите продукт и можете скорректировать курс.",
-    },
-    {
-      q: "Что будет после запуска?",
-      a: "30 дней бесплатной поддержки. Дальше — по желанию: сопровождение или доработки.",
-    },
-    {
-      q: "Подпишете NDA?",
-      a: "Да, подписываем NDA до обсуждения деталей проекта, если это нужно.",
-    },
-    {
-      q: "Что нужно от нас?",
-      a: "Описание задачи своими словами, доступы к нужным системам и один ответственный человек на 1–2 часа в неделю для демо и обратной связи.",
-    },
-  ],
-};
-
-export const ctaSection = {
-  eyebrow: "Старт",
-  title: "Обсудим ваш проект за 15 минут",
-  subtitle: "Оставьте контакт — созвонимся или спишемся в Telegram, разберём задачу и предложим решение. Ни к чему не обязывает.",
-  bullets: ["Ответим в течение 15 минут", "Предложим решение и сроки", "NDA по запросу"],
-  submit: "Получить план проекта",
-  telegramLead: "Удобнее в мессенджере?",
-  telegramCta: "Написать в Telegram",
-  success: {
-    title: "Заявка принята",
-    text: "Ответим в течение 15 минут в рабочее время.",
-  },
-  error: "Не получилось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram.",
-};
+export function getCtaSection(locale: Locale) {
+  const o = t(locale);
+  return {
+    eyebrow: m.cta_eyebrow({}, o),
+    title: m.cta_title({}, o),
+    subtitle: m.cta_subtitle({}, o),
+    bullets: [m.cta_bullet_1({}, o), m.cta_bullet_2({}, o), m.cta_bullet_3({}, o)],
+    telegramLead: m.cta_telegram_lead({}, o),
+    telegramCta: m.write_telegram({}, o),
+  };
+}

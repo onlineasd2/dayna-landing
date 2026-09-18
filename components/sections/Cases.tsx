@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { casesSection } from "@/data/content";
+import { casesSection } from "@/data/cases";
 import { cn } from "@/lib/utils";
 
 export function Cases() {

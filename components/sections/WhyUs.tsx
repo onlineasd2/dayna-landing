@@ -1,9 +1,10 @@
 import { CalendarCheck, FileSignature, LifeBuoy, LockKeyhole, Palette, Sparkles, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { whySection } from "@/data/content";
+import { getWhySection, type WhyIcon } from "@/data/content";
+import type { Locale } from "@/lib/i18n";
 
-const icons: Record<(typeof whySection.items)[number]["icon"], LucideIcon> = {
+const icons: Record<WhyIcon, LucideIcon> = {
   palette: Palette,
   lock: LockKeyhole,
   file: FileSignature,
@@ -12,7 +13,8 @@ const icons: Record<(typeof whySection.items)[number]["icon"], LucideIcon> = {
   lifebuoy: LifeBuoy,
 };
 
-export function WhyUs() {
+export function WhyUs({ locale }: { locale: Locale }) {
+  const whySection = getWhySection(locale);
   return (
     <Section id="why" labelledBy="why-title" className="border-y border-border bg-surface/30">
       <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">

@@ -3,10 +3,12 @@
 import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { telegramUrl } from "@/data/site";
+import type { Locale } from "@/lib/i18n";
+import { m } from "@/paraglide/messages.js";
 import { cn } from "@/lib/utils";
 
 /** Плавающая кнопка Telegram на мобильных. Прячется на первом экране и над формой заявки. */
-export function TelegramFab() {
+export function TelegramFab({ locale }: { locale: Locale }) {
   const [pastHero, setPastHero] = useState(false);
   const [overForm, setOverForm] = useState(false);
 
@@ -39,7 +41,7 @@ export function TelegramFab() {
       href={telegramUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Написать в Telegram"
+      aria-label={m.write_telegram({}, { locale })}
       tabIndex={shown ? 0 : -1}
       aria-hidden={!shown}
       className={cn(

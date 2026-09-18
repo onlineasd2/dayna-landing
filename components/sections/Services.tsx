@@ -2,11 +2,13 @@ import { Clock } from "lucide-react";
 import { ServiceVisualView } from "@/components/mockups/ServiceVisuals";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { services, servicesSection } from "@/data/services";
+import { getServicesSection } from "@/data/services";
+import type { Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { ServiceLink } from "./ServiceLink";
 
-export function Services() {
+export function Services({ locale }: { locale: Locale }) {
+  const servicesSection = getServicesSection(locale);
   return (
     <Section id="services" labelledBy="services-title">
       <SectionHeading
@@ -17,7 +19,7 @@ export function Services() {
       />
 
       <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-        {services.map((s, i) => {
+        {servicesSection.items.map((s, i) => {
           const big = s.layout.includes("row-span-2");
           return (
             <Reveal as="li" key={s.id} delay={(i % 3) * 0.06} className={cn("flex", s.layout)}>
@@ -32,7 +34,7 @@ export function Services() {
                 </div>
 
                 <div className={cn("mt-auto", big && "flex-1")}>
-                  <ServiceVisualView kind={s.visual} />
+                  <ServiceVisualView kind={s.visual} locale={locale} />
                 </div>
 
                 <footer className="flex items-center justify-between gap-4 border-t border-border pt-4">
