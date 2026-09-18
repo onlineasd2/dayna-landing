@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Menu, Send, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -77,15 +76,10 @@ export function Header() {
         </div>
       </Container>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
+      {open && (
+          <div
             id="mobile-menu"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-bg md:hidden"
+            className="h-[calc(100dvh-4rem)] animate-fade-in overflow-y-auto border-t border-border bg-bg md:hidden"
           >
             <Container className="flex h-full flex-col py-6">
               <nav aria-label="Мобильное меню">
@@ -115,9 +109,8 @@ export function Header() {
                 <p className="pt-2 text-center text-sm text-subtle">{site.contacts.workingHours}</p>
               </div>
             </Container>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+      )}
     </header>
   );
 }

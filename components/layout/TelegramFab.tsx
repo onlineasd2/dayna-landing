@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { telegramUrl } from "@/data/site";
 import { cn } from "@/lib/utils";
 
-/** Плавающая кнопка Telegram на мобильных. Прячется на первом экране и над квизом/формой. */
+/** Плавающая кнопка Telegram на мобильных. Прячется на первом экране и над формой заявки. */
 export function TelegramFab() {
   const [pastHero, setPastHero] = useState(false);
   const [overForm, setOverForm] = useState(false);
@@ -15,7 +15,7 @@ export function TelegramFab() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const targets = ["quiz", "contact"].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+    const targets = ["contact"].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
     const visible = new Set<Element>();
     const observer = new IntersectionObserver((entries) => {
       for (const e of entries) {

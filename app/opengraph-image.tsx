@@ -6,8 +6,8 @@ export const alt = `${site.name} — ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const title = hero.title.replace("‑", "-");
-const subtitle = "Боты · ИИ-агенты · Автоматизация · SaaS · Сайты";
+const title = hero.title;
+const subtitle = "Сайты · Боты · Веб-сервисы · Автоматизация · SaaS";
 
 /** Подгружаем подмножество Manrope с кириллицей (только нужные символы) из Google Fonts. */
 async function loadFont(weight: number, text: string): Promise<ArrayBuffer | null> {

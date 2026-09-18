@@ -1,13 +1,14 @@
 // Мини-интерфейсы для карточек услуг. Чистая вёрстка, без JS — рендерятся на сервере.
 import {
   Bot,
+  CalendarCheck,
   CircleCheck,
-  CreditCard,
   Database,
   FileText,
   Gauge,
   MessageSquare,
   Search,
+  Send,
   Sheet,
   Sparkles,
   Workflow,
@@ -19,27 +20,22 @@ const frame = "rounded-2xl border border-border bg-bg/60";
 
 function AgentVisual() {
   return (
-    <div className={cn(frame, "flex h-full min-h-[220px] flex-col gap-2 p-4 text-[12px] leading-snug")}>
-      <div className="mb-1 flex items-center gap-2 text-subtle">
+    <div className={cn(frame, "flex flex-col gap-2 p-3.5 text-[12px] leading-snug")}>
+      <div className="mb-0.5 flex items-center gap-2 text-subtle">
         <span className="flex size-6 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Bot className="size-3.5" />
         </span>
-        Агент · 3 канала · онлайн
+        Ассистент · онлайн 24/7
         <span className="ml-auto size-1.5 animate-pulse-dot rounded-full bg-accent" />
       </div>
       <p className="max-w-[80%] self-end rounded-xl rounded-br-sm bg-white/[0.07] px-3 py-2">
-        Нужен бот для записи в салон, сколько стоит?
+        Можно записаться на завтра вечером?
       </p>
       <p className="max-w-[85%] self-start rounded-xl rounded-bl-sm border border-accent/20 bg-accent/[0.07] px-3 py-2">
-        От 40 000 ₽, запуск за 1–3 недели. Сколько у вас мастеров и какая CRM?
+        Да! Свободно в 18:00 и 19:30. Какое время удобнее?
       </p>
-      <p className="max-w-[60%] self-end rounded-xl rounded-br-sm bg-white/[0.07] px-3 py-2">6 мастеров, YCLIENTS</p>
-      <p className="hidden max-w-[85%] self-start rounded-xl rounded-bl-sm border border-accent/20 bg-accent/[0.07] px-3 py-2 lg:block">
-        Подойдёт бот с ИИ и записью в YCLIENTS: от 75 000 ₽, запуск за 2 недели. Отправить план проекта?
-      </p>
-      <p className="hidden max-w-[60%] self-end rounded-xl rounded-br-sm bg-white/[0.07] px-3 py-2 lg:block">Да, присылайте</p>
-      <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
-        {["Горячий лид", "Бюджет ок", "→ CRM"].map((t) => (
+      <div className="flex flex-wrap gap-1.5 pt-1">
+        {["Запись создана", "→ CRM"].map((t) => (
           <span key={t} className="rounded-md border border-accent/25 bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
             {t}
           </span>
@@ -53,15 +49,15 @@ function BotVisual() {
   return (
     <div className={cn(frame, "flex flex-col gap-2 p-3.5 text-[12px]")}>
       <p className="max-w-[88%] rounded-xl rounded-bl-sm bg-white/[0.06] px-3 py-2 leading-snug">
-        Выберите тариф курса:
+        Выберите удобное время:
       </p>
-      <div className="grid grid-cols-2 gap-1.5">
-        {["Базовый · 9 900 ₽", "PRO · 19 900 ₽"].map((b, i) => (
+      <div className="grid grid-cols-3 gap-1.5">
+        {["11:00", "14:30", "16:30"].map((b, i) => (
           <span
             key={b}
             className={cn(
               "rounded-lg border px-2 py-1.5 text-center text-[11px] font-medium",
-              i === 1 ? "border-accent/40 bg-accent/10 text-accent" : "border-border-strong text-muted",
+              i === 2 ? "border-accent/40 bg-accent/10 text-accent" : "border-border-strong text-muted",
             )}
           >
             {b}
@@ -69,8 +65,8 @@ function BotVisual() {
         ))}
       </div>
       <div className="flex items-center gap-2 rounded-xl bg-white/[0.04] px-3 py-2">
-        <CreditCard className="size-3.5 text-accent" />
-        <span className="text-muted">Оплата прошла</span>
+        <CalendarCheck className="size-3.5 text-accent" />
+        <span className="text-muted">Запись подтверждена</span>
         <CircleCheck className="ml-auto size-3.5 text-accent" />
       </div>
     </div>
@@ -112,10 +108,10 @@ function DashboardVisual() {
     <div className={cn(frame, "grid gap-3 p-4 sm:grid-cols-[auto_1fr]")}>
       <div className="flex gap-3 sm:flex-col">
         {[
-          { label: "MRR", value: "1,4 млн ₽", delta: "+18%" },
-          { label: "Клиенты", value: "312", delta: "+24" },
+          { label: "Пользователи", value: "1 280", delta: "+18%" },
+          { label: "Активны сегодня", value: "312", delta: "+24" },
         ].map((k) => (
-          <div key={k.label} className="min-w-[110px] rounded-xl bg-white/[0.04] px-3 py-2">
+          <div key={k.label} className="min-w-[120px] rounded-xl bg-white/[0.04] px-3 py-2">
             <p className="text-[11px] text-subtle">{k.label}</p>
             <p className="font-display text-base font-bold">{k.value}</p>
             <p className="text-[11px] text-accent">{k.delta}</p>
@@ -157,12 +153,12 @@ function CabinetVisual() {
   const rows = [
     { id: "#1042", status: "В работе", accent: true },
     { id: "#1041", status: "Отгружен", accent: false },
-    { id: "#1039", status: "Оплачен", accent: false },
+    { id: "#1039", status: "Выполнен", accent: false },
   ];
   return (
     <div className={cn(frame, "overflow-hidden text-[12px]")}>
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-2">
-        {["Заказы", "Документы", "Оплаты"].map((t, i) => (
+        {["Заказы", "Документы", "Чат"].map((t, i) => (
           <span key={t} className={cn("rounded-md px-2 py-0.5", i === 0 ? "bg-white/[0.08] text-fg" : "text-subtle")}>
             {t}
           </span>
@@ -187,27 +183,50 @@ function CabinetVisual() {
 
 function LandingVisual() {
   return (
-    <div className={cn(frame, "overflow-hidden")}>
+    <div className={cn(frame, "flex h-full flex-col overflow-hidden")}>
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-2">
         <span className="size-2 rounded-full bg-white/10" />
         <span className="size-2 rounded-full bg-white/10" />
         <span className="size-2 rounded-full bg-white/10" />
-        <span className="ml-2 h-4 flex-1 rounded bg-white/[0.04]" />
+        <span className="ml-2 flex h-4 flex-1 items-center rounded bg-white/[0.04] px-2 text-[9px] text-subtle">your-company.ru</span>
       </div>
-      <div className="flex items-center gap-4 p-4">
-        <div className="flex-1 space-y-2">
-          <span className="block h-2.5 w-4/5 rounded bg-white/20" />
-          <span className="block h-2.5 w-3/5 rounded bg-white/20" />
-          <span className="block h-2 w-full rounded bg-white/[0.07]" />
-          <span className="mt-3 block h-5 w-24 rounded-md bg-accent" />
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex items-center justify-between">
+          <span className="h-2 w-12 rounded bg-white/25" />
+          <span className="flex gap-2">
+            <span className="h-1.5 w-8 rounded bg-white/10" />
+            <span className="h-1.5 w-8 rounded bg-white/10" />
+            <span className="h-1.5 w-8 rounded bg-white/10" />
+          </span>
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <span className="relative flex size-14 items-center justify-center rounded-full border-[3px] border-accent font-display text-base font-bold text-accent">
-            98
-          </span>
-          <span className="flex items-center gap-1 text-[10px] text-subtle">
-            <Gauge className="size-3" /> Lighthouse
-          </span>
+        <div className="flex items-center gap-4">
+          <div className="flex-1 space-y-2">
+            <span className="block h-3 w-4/5 rounded bg-white/25" />
+            <span className="block h-3 w-3/5 rounded bg-white/25" />
+            <span className="block h-2 w-full rounded bg-white/[0.07]" />
+            <span className="block h-2 w-5/6 rounded bg-white/[0.07]" />
+            <span className="mt-3 block h-6 w-28 rounded-md bg-accent" />
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="flex size-14 items-center justify-center rounded-full border-[3px] border-accent font-display text-base font-bold text-accent">
+              98
+            </span>
+            <span className="flex items-center gap-1 text-[10px] text-subtle">
+              <Gauge className="size-3" /> Lighthouse
+            </span>
+          </div>
+        </div>
+        <span className="block min-h-16 flex-1 rounded-lg border border-border bg-gradient-to-br from-white/[0.07] via-white/[0.02] to-transparent" />
+        <div className="grid grid-cols-3 gap-2">
+          {["Проекты", "Отзывы", "Команда"].map((t) => (
+            <span key={t} className="rounded-lg border border-border bg-white/[0.03] px-2.5 py-3 text-[11px] text-subtle">
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 rounded-xl border border-accent/25 bg-accent/[0.06] px-3 py-2 text-[12px]">
+          <Send className="size-3.5 text-accent" />
+          <span className="text-muted">Новая заявка с сайта отправлена в Telegram</span>
         </div>
       </div>
     </div>

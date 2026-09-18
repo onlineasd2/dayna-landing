@@ -1,36 +1,22 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-  y?: number;
   as?: "div" | "li" | "article";
 };
 
-/** Появление блока при скролле: fade + сдвиг. Уважает prefers-reduced-motion. */
-export function Reveal({ children, className, delay = 0, y = 20, as = "div" }: RevealProps) {
-  const reduce = useReducedMotionSafe();
-  const Component = motion[as];
-
-  if (reduce) {
-    const Static = as;
-    return <Static className={className}>{children}</Static>;
-  }
-
+/**
+ * Появление блока при скролле: fade + сдвиг на 20px.
+ * Серверный компонент — анимацию включает один общий RevealObserver (CSS в globals.css),
+ * поэтому на каждый блок не грузится JS. prefers-reduced-motion и отключённый JS учтены в CSS.
+ */
+export function Reveal({ children, className, delay = 0, as: Tag = "div" }: RevealProps) {
+  const style = delay ? ({ "--reveal-delay": `${delay}s` } as CSSProperties) : undefined;
   return (
-    <Component
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <Tag data-reveal="" className={className} style={style}>
       {children}
-    </Component>
+    </Tag>
   );
 }

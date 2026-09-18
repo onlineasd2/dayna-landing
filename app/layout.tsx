@@ -5,13 +5,14 @@ import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin", "cyrillic"],
+  // Предзагружаем только кириллицу — латиница подгрузится по unicode-range при необходимости
+  subsets: ["cyrillic"],
   display: "swap",
 });
 
 const manrope = Manrope({
   variable: "--font-manrope",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["cyrillic"],
   weight: ["600", "700", "800"],
   display: "swap",
 });
@@ -47,6 +48,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${inter.variable} ${manrope.variable}`}>
+      <head>
+        <noscript>
+          <style>{"[data-reveal]{opacity:1!important;transform:none!important}"}</style>
+        </noscript>
+      </head>
       <body className="noise min-h-dvh overflow-x-clip" suppressHydrationWarning>{children}</body>
     </html>
   );

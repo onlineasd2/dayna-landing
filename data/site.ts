@@ -4,9 +4,9 @@ export const site = {
   // TODO: заменить на реальное название студии
   name: "Dayna",
   // TODO: заменить на реальный слоган
-  tagline: "IT-продукты под ключ — от идеи до прибыли",
+  tagline: "IT-продукты под ключ — от идеи до запуска",
   description:
-    "Разрабатываем Telegram-ботов, ИИ-агентов, автоматизацию, SaaS, веб-сервисы и лендинги под ключ. Дизайн входит в стоимость, цена и сроки — в договоре.",
+    "Разрабатываем сайты, Telegram-ботов, веб-сервисы и SaaS, автоматизируем процессы и внедряем ИИ. Под ключ — от идеи и дизайна до запуска и поддержки.",
   // TODO: заменить на реальный домен
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://dayna.studio",
   locale: "ru_RU",
@@ -34,10 +34,10 @@ export const telegramUrl = `https://t.me/${site.contacts.telegram}`;
 
 export const nav = [
   { label: "Услуги", href: "#services" },
-  { label: "Кейсы", href: "#cases" },
-  { label: "Процесс", href: "#process" },
-  { label: "Цены", href: "#quiz" },
+  { label: "Как работаем", href: "#process" },
+  { label: "Почему мы", href: "#why" },
   { label: "FAQ", href: "#faq" },
+  { label: "Контакты", href: "#contact" },
 ] as const;
 
 export const headerCta = { label: "Обсудить проект", href: "#contact" } as const;

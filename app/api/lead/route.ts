@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { calculateEstimate } from "@/data/pricing";
 import { rateLimit } from "@/lib/rate-limit";
 import { leadSchema } from "@/lib/schemas";
 import { formatLeadMessage, sendTelegramMessage, TelegramConfigError } from "@/lib/telegram";
@@ -43,9 +42,7 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   }
 
-  // Цену пересчитываем на сервере — клиенту не доверяем
-  const estimate = lead.source === "quiz" ? calculateEstimate(lead.quiz) : undefined;
-  const message = formatLeadMessage(lead, estimate, req.headers.get("referer"));
+  const message = formatLeadMessage(lead, req.headers.get("referer"));
 
   try {
     await sendTelegramMessage(message);

@@ -1,18 +1,16 @@
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { TelegramFab } from "@/components/layout/TelegramFab";
-import { Cases } from "@/components/sections/Cases";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Hero } from "@/components/sections/Hero";
 import { PainsSolutions } from "@/components/sections/PainsSolutions";
 import { Process } from "@/components/sections/Process";
-import { QuizSection } from "@/components/sections/QuizSection";
 import { Services } from "@/components/sections/Services";
 import { TechMarquee } from "@/components/sections/TechMarquee";
 import { WhyUs } from "@/components/sections/WhyUs";
+import { RevealObserver } from "@/components/ui/RevealObserver";
 import { faqSection } from "@/data/content";
-import { projectTypes } from "@/data/pricing";
 import { services } from "@/data/services";
 import { site, telegramUrl } from "@/data/site";
 
@@ -33,11 +31,6 @@ function JsonLd() {
         makesOffer: services.map((s) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name: s.title, description: s.result },
-          priceSpecification: {
-            "@type": "PriceSpecification",
-            priceCurrency: "RUB",
-            minPrice: projectTypes[s.id].price[0],
-          },
         })),
       },
       {
@@ -75,15 +68,15 @@ export default function Home() {
         <TechMarquee />
         <Services />
         <PainsSolutions />
-        <Cases />
+        {/* TODO: вернуть блок кейсов (<Cases /> из components/sections/Cases.tsx), когда появятся реальные проекты */}
         <Process />
         <WhyUs />
-        <QuizSection />
         <Faq />
         <FinalCta />
       </main>
       <Footer />
       <TelegramFab />
+      <RevealObserver />
     </>
   );
 }

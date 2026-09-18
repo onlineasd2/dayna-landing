@@ -1,5 +1,5 @@
 import { ArrowRight, ArrowDown } from "lucide-react";
-import { AiChatMockup } from "@/components/mockups/AiChatMockup";
+import { HeroShowcase } from "@/components/mockups/HeroShowcase";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -27,7 +27,7 @@ export function Hero() {
       />
 
       <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
           <div>
             <Badge dot className="mb-6">
               {hero.badge}
@@ -47,7 +47,7 @@ export function Hero() {
             </div>
           </div>
 
-          <AiChatMockup className="mx-auto w-full max-w-[460px] lg:mr-0" />
+          <HeroShowcase className="mx-auto w-full max-w-[520px] lg:mr-0" />
         </div>
 
         <dl className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border sm:mt-24 lg:grid-cols-4">
