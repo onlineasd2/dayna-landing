@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import type { ReactNode } from "react";
 
 type RevealProps = {
@@ -13,7 +14,7 @@ type RevealProps = {
 
 /** Появление блока при скролле: fade + сдвиг. Уважает prefers-reduced-motion. */
 export function Reveal({ children, className, delay = 0, y = 20, as = "div" }: RevealProps) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Component = motion[as];
 
   if (reduce) {

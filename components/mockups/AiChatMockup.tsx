@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import { Bot, CheckCheck, CircleCheck, Paperclip, SendHorizontal, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { heroChat } from "@/data/hero";
@@ -17,7 +18,7 @@ function delayFor(index: number) {
 export function AiChatMockup({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: false, amount: 0.4 });
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   // shown — сколько сообщений уже видно; TOTAL + 1 означает, что показана карточка заявки
   const [shown, setShown] = useState(1);
