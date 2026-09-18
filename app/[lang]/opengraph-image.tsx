@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getHero } from "@/data/hero";
 import { getSiteTexts, site } from "@/data/site";
@@ -14,18 +16,24 @@ export function generateStaticParams() {
   return langParams.map((lang) => ({ lang }));
 }
 
-/** Подгружаем подмножество Manrope с кириллицей (только нужные символы) из Google Fonts. */
-async function loadFont(weight: number, text: string): Promise<ArrayBuffer | null> {
-  try {
-    const url = `https://fonts.googleapis.com/css2?family=Manrope:wght@${weight}&text=${encodeURIComponent(text)}`;
-    const css = await (await fetch(url)).text();
-    const src = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/);
-    if (!src) return null;
-    const res = await fetch(src[1]);
-    return res.ok ? await res.arrayBuffer() : null;
-  } catch {
-    return null;
-  }
+// Шрифты берём из @fontsource/manrope — без сетевых запросов при сборке.
+// Кириллица + cyrillic-ext (казахские буквы) + латиница; Satori сам подбирает файл с нужным глифом.
+// У каждого веса своё имя семейства: при одинаковом имени Satori берёт первый файл с глифом и игнорирует вес.
+const FONT_DIR = join(process.cwd(), "node_modules/@fontsource/manrope/files");
+const SUBSETS = ["cyrillic", "cyrillic-ext", "latin"] as const;
+const WEIGHTS = [600, 800] as const;
+
+function loadFonts() {
+  return Promise.all(
+    WEIGHTS.flatMap((weight) =>
+      SUBSETS.map(async (subset) => ({
+        name: `Manrope${weight}`,
+        data: await readFile(join(FONT_DIR, `manrope-${subset}-${weight}-normal.woff`)),
+        weight,
+        style: "normal" as const,
+      })),
+    ),
+  );
 }
 
 export default async function Image({ params }: { params: Promise<{ lang: string }> }) {
@@ -33,12 +41,7 @@ export default async function Image({ params }: { params: Promise<{ lang: string
   const title = getHero(locale).title;
   const subtitle = m.og_subtitle({}, { locale });
   const tagline = getSiteTexts(locale).tagline;
-  const text = `${site.name}${title}${subtitle}${tagline}`;
-  const [bold, semibold] = await Promise.all([loadFont(800, text), loadFont(600, text)]);
-  const fonts = [
-    bold && { name: "Manrope", data: bold, weight: 800 as const, style: "normal" as const },
-    semibold && { name: "Manrope", data: semibold, weight: 600 as const, style: "normal" as const },
-  ].filter((f) => !!f);
+  const fonts = await loadFonts();
 
   return new ImageResponse(
     (
@@ -55,7 +58,7 @@ export default async function Image({ params }: { params: Promise<{ lang: string
             "radial-gradient(circle at 85% 10%, rgba(198,244,50,0.22), transparent 45%), radial-gradient(rgba(255,255,255,0.08) 1.5px, transparent 1.5px)",
           backgroundSize: "100% 100%, 28px 28px",
           color: "#FAFAFA",
-          fontFamily: "Manrope",
+          fontFamily: "Manrope800",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
@@ -77,10 +80,10 @@ export default async function Image({ params }: { params: Promise<{ lang: string
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div style={{ fontSize: 76, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3, maxWidth: 1000 }}>{title}</div>
-          <div style={{ fontSize: 30, fontWeight: 600, color: "#A1A1AA" }}>{subtitle}</div>
+          <div style={{ fontSize: 30, fontFamily: "Manrope600", fontWeight: 600, color: "#A1A1AA" }}>{subtitle}</div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 26, fontWeight: 600 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 26, fontFamily: "Manrope600", fontWeight: 600 }}>
           <div style={{ width: 12, height: 12, borderRadius: 6, background: "#C6F432" }} />
           <div style={{ color: "#C6F432" }}>{tagline}</div>
         </div>
